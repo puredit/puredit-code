@@ -1,0 +1,43 @@
+{
+  "name": "@puredit/editor-polars",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "build-watch": "vite build --watch",
+    "dev": "vite",
+    "lint": "svelte-check --tsconfig ./tsconfig.json",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "6",
+    "@codemirror/commands": "6",
+    "@codemirror/lang-python": "6",
+    "@codemirror/language": "6",
+    "@codemirror/lint": "6",
+    "@codemirror/state": "6",
+    "@codemirror/theme-one-dark": "6",
+    "@codemirror/view": "6",
+    "@lezer/highlight": "1",
+    "@puredit/codemirror-typescript": "https://github.com/puredit/codemirror-typescript.git",
+    "@puredit/parser": "https://github.com/puredit/parser.git",
+    "@puredit/projections": "https://github.com/puredit/projections.git",
+    "@puredit/utils": "https://github.com/puredit/utils.git",
+    "@replit/codemirror-indentation-markers": "6",
+    "codemirror": "6",
+    "normalize.css": "^8.0.1",
+    "svelte-dark-mode": "^2.1.0"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^1.1.0",
+    "@tsconfig/svelte": "^3.0.0",
+    "@types/node": "^20.5.9",
+    "sass": "^1.53.0",
+    "svelte": "^3.48.0",
+    "svelte-check": "^2.8.0",
+    "svelte-preprocess": "^4.10.7",
+    "tslib": "^2.4.0",
+    "vite": "^3.1.0"
+  }
+}

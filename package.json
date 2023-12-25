@@ -1,0 +1,17 @@
+{
+  "name": "@puredit/puredit-code",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "vscode-extension/*",
+    "vscode-extension/common/*",
+    "vscode-extension/editors/*"
+  ],
+  "devDependencies": {
+    "@types/vscode": "^1.83.0",
+    "svelte": "^3.46.4",
+    "svelte-preprocess": "^4.10.7",
+    "typescript": "^4.5.5"
+  }
+}
