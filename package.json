@@ -4,9 +4,9 @@
   "type": "module",
   "private": true,
   "workspaces": [
-    "vscode-extension/*",
-    "vscode-extension/common/*",
-    "vscode-extension/editors/*"
+    "extension/*",
+    "editors/*",
+    "editors/common/*"
   ],
   "devDependencies": {
     "@types/vscode": "^1.83.0",

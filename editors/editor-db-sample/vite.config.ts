@@ -6,7 +6,7 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 export default defineConfig({
   build: {
     target: ["chrome89", "edge89", "firefox89", "safari15.1"],
-    outDir: "../../out",
+    outDir: "../../extension/out",
     rollupOptions: {
       output: {
         entryFileNames: `editors/db-sample/[name].js`,
@@ -20,7 +20,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: "../../../node_modules/@puredit/parser/wasm/*",
+          src: "../../node_modules/@puredit/parser/wasm/*",
           dest: "wasm"
         }
       ]

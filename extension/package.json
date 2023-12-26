@@ -1,5 +1,5 @@
 {
-  "name": "@puredit/vscode-extension",
+  "name": "@puredit-code/extension",
   "displayName": "pureditcode",
   "description": "",
   "version": "0.0.1",
@@ -39,12 +39,6 @@
             "filenamePattern": "*.py"
           }
         ]
-      }
-    ],
-    "commands": [
-      {
-        "command": "pureditcode.helloWorld",
-        "title": "Hello World"
       }
     ]
   },

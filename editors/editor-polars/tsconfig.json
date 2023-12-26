@@ -15,8 +15,7 @@
     "src/**/*.ts",
     "src/**/*.js",
     "src/**/*.svelte",
-    "src/global.d.ts",
-    "../../../apps/minimum-working/src/lib/projections/selectColumnList.ts"
+    "src/global.d.ts"
   ],
   "references": [
     {
