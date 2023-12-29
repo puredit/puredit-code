@@ -34,12 +34,14 @@
       const text = message.payload;
       projectionalEditor.dispatch({
         changes: { from: 0, insert: text as string },
-        annotations: projectionalEditorBuilder.isInit.of(true),
+        annotations: projectionalEditorBuilder.syncChangeAnnotation.of(true),
+        filter: false,
       });
     } else if (message.type === MessageType.UPDATE_EDITOR) {
       projectionalEditor.dispatch({
         changes: message.payload as ChangeSpec,
-        annotations: projectionalEditorBuilder.isInit.of(false),
+        annotations: projectionalEditorBuilder.syncChangeAnnotation.of(true),
+        filter: false,
       });
     }
   }

@@ -24,7 +24,7 @@ import { MessageType, mapChangeSetToChanges } from "@puredit/editor-interface";
 export default class ProjectionalEditorBuilder {
   private extenstions: Extension[] = [];
   private parent: Element | DocumentFragment;
-  readonly isInit = Annotation.define<boolean>();
+  readonly syncChangeAnnotation = Annotation.define<boolean>();
 
   constructor() {
     this.addBasicExtensions()
@@ -62,8 +62,7 @@ export default class ProjectionalEditorBuilder {
 
   private getDispatchFunction() {
     return (transaction: Transaction, projectionalEditor: EditorView) => {
-      if (!transaction.changes.empty && !transaction.annotation(this.isInit)) {
-        console.log("No init");
+      if (!transaction.changes.empty && !transaction.annotation(this.syncChangeAnnotation)) {
         const changes = mapChangeSetToChanges(transaction.changes);
         changes.forEach((change) => {
           const lineFromBefore = projectionalEditor.state.doc.lineAt(
@@ -92,7 +91,6 @@ export default class ProjectionalEditorBuilder {
           });
         });
       } else {
-        console.log("Init");
         projectionalEditor.update([transaction]);
       }
       console.log(transaction);

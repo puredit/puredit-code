@@ -20,9 +20,9 @@ export class DbSampleEditorProvider implements vscode.CustomTextEditorProvider {
   }
 
   private static readonly viewType = "pureditcode.dbSampleEditor";
-  private updateSemaphore = 0;
+  private updateCounter = 0;
 
-  constructor(private readonly context: vscode.ExtensionContext) {}
+  constructor(private readonly context: vscode.ExtensionContext) { }
 
   public async resolveCustomTextEditor(
     document: vscode.TextDocument,
@@ -45,14 +45,17 @@ export class DbSampleEditorProvider implements vscode.CustomTextEditorProvider {
           document
         );
         vscode.workspace.applyEdit(workspaceEdit);
-        this.updateSemaphore += 1;
+        this.updateCounter += 1;
       }
     });
 
     const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(
       (e) => {
+        if (e.contentChanges.length === 0) {
+          return;
+        }
         if (e.document.uri.toString() === document.uri.toString()) {
-          if (this.updateSemaphore === 0) {
+          if (this.updateCounter === 0) {
             e.contentChanges.forEach((contentChange) => {
               webviewPanel.webview.postMessage({
                 type: MessageType.UPDATE_EDITOR,
@@ -60,7 +63,7 @@ export class DbSampleEditorProvider implements vscode.CustomTextEditorProvider {
               });
             });
           } else {
-            this.updateSemaphore -= 1;
+            this.updateCounter -= 1;
           }
         }
       }

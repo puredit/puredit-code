@@ -33,7 +33,7 @@
       const text = message.payload;
       projectionalEditor.dispatch({
         changes: { from: 0, insert: text as string },
-        annotations: projectionalEditorBuilder.isInit.of(true),
+        annotations: projectionalEditorBuilder.syncChangeAnnotation.of(true),
       });
     }
   }
