@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
-import * as path from "path";
-import { getNonce } from "./util";
+import { getNonce } from "./utils";
 import {
   ChangeDocumentPayload,
   ChangeEditorPayload,
@@ -9,20 +8,27 @@ import {
 } from "@puredit/editor-interface";
 import { MessageType } from "@puredit/editor-interface";
 
-export class DbSampleEditorProvider implements vscode.CustomTextEditorProvider {
-  public static register(context: vscode.ExtensionContext): vscode.Disposable {
-    const provider = new DbSampleEditorProvider(context);
+export interface SvelteResources {
+  scriptPath: string
+  stylePath: string
+}
+
+export class ProjectionalEditorProvider implements vscode.CustomTextEditorProvider {
+  public static register(context: vscode.ExtensionContext, viewType: string, svelteResources: SvelteResources): vscode.Disposable {
+    const provider = new this(context, svelteResources);
     const providerRegistration = vscode.window.registerCustomEditorProvider(
-      DbSampleEditorProvider.viewType,
+      viewType,
       provider
     );
     return providerRegistration;
   }
 
-  private static readonly viewType = "pureditcode.dbSampleEditor";
   private updateCounter = 0;
 
-  constructor(private readonly context: vscode.ExtensionContext) { }
+  constructor(
+    private readonly context: vscode.ExtensionContext,
+    private readonly svelteResources: SvelteResources
+  ) { }
 
   public async resolveCustomTextEditor(
     document: vscode.TextDocument,
@@ -124,18 +130,20 @@ export class DbSampleEditorProvider implements vscode.CustomTextEditorProvider {
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(
         this.context.extensionUri,
-        "out/editors/db-sample/index.js"
+        "out",
+        this.svelteResources.scriptPath
       )
     );
 
-    const styleMainUri = webview.asWebviewUri(
+    const styleUri = webview.asWebviewUri(
       vscode.Uri.joinPath(
         this.context.extensionUri,
-        "out/editors/db-sample/index.css"
+        "out",
+        this.svelteResources.stylePath
       )
     );
 
-    const baseDir = path.join(__dirname, "out");
+    const baseDir = vscode.Uri.joinPath(this.context.extensionUri, "out/").toString().slice(7);
     const baseUrl = "https://file+.vscode-resource.vscode-cdn.net" + baseDir;
 
     const nonce = getNonce();
@@ -145,19 +153,12 @@ export class DbSampleEditorProvider implements vscode.CustomTextEditorProvider {
 			<html lang="en">
 			<head>
 				<meta charset="UTF-8">
-
-				<!--
-				Use a content security policy to only allow loading images from https or from our extension directory,
-				and only allow scripts that have a specific nonce.
-				-->
 				<meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src ${webview.cspSource}; img-src ${webview.cspSource}; style-src 'unsafe-inline' ${webview.cspSource}; script-src 'unsafe-eval' 'nonce-${nonce}' ${webview.cspSource};">
 				<base href=${baseUrl}>
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-				<link href="${styleMainUri}" rel="stylesheet" />
-
-				<title>DB Sample</title>
+				<link href="${styleUri}" rel="stylesheet" />
 			</head>
+
 			<body>
 				<script nonce="${nonce}">
 					const vscode = acquireVsCodeApi();
