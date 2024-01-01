@@ -1,2 +1,2 @@
-import ProjectionalEditorBuilder from "./editorBuilder";
-export { ProjectionalEditorBuilder };
+export { default as ProjectionalEditorBuilder } from "./projectionalEditorBuilder";
+export { default as ProjectionalEditor } from "./projectionalEditor";

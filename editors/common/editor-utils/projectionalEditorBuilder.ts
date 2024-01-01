@@ -1,10 +1,5 @@
 import { basicSetup } from "codemirror";
-import { EditorState } from "@codemirror/state";
-import {
-  Annotation,
-  type Extension,
-  type Transaction,
-} from "@codemirror/state";
+import type { Extension } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
 import { indentWithTab } from "@codemirror/commands";
 import { autocompletion } from "@codemirror/autocomplete";
@@ -19,12 +14,11 @@ import {
   completionSource as typescriptCompletionSource,
 } from "@puredit/codemirror-typescript";
 import { indentationMarkers } from "@replit/codemirror-indentation-markers";
-import { MessageType, mapChangeSetToChanges } from "@puredit/editor-interface";
+import ProjectionalEditor from "./projectionalEditor";
 
 export default class ProjectionalEditorBuilder {
   private extenstions: Extension[] = [];
   private parent: Element | DocumentFragment;
-  readonly syncChangeAnnotation = Annotation.define<boolean>();
 
   constructor() {
     this.addBasicExtensions()
@@ -60,43 +54,6 @@ export default class ProjectionalEditorBuilder {
     return this;
   }
 
-  private getDispatchFunction() {
-    return (transaction: Transaction, projectionalEditor: EditorView) => {
-      if (!transaction.changes.empty && !transaction.annotation(this.syncChangeAnnotation)) {
-        const changes = mapChangeSetToChanges(transaction.changes);
-        changes.forEach((change) => {
-          const lineFromBefore = projectionalEditor.state.doc.lineAt(
-            change.fromBefore
-          );
-          const lineToBefore = projectionalEditor.state.doc.lineAt(
-            change.toBefore
-          );
-          change.setLinesBefore(lineFromBefore, lineToBefore);
-        });
-
-        projectionalEditor.update([transaction]);
-
-        changes.forEach((change) => {
-          const lineFromAfter = projectionalEditor.state.doc.lineAt(
-            change.fromAfter
-          );
-          const lineToAfter = projectionalEditor.state.doc.lineAt(
-            change.toAfter
-          );
-          change.setLinesAfter(lineFromAfter, lineToAfter);
-          change.computeLineInfo();
-          vscode.postMessage({
-            type: MessageType.UPDATE_DOCUMENT,
-            payload: change.toChangeDocumentPayload(),
-          });
-        });
-      } else {
-        projectionalEditor.update([transaction]);
-      }
-      console.log(transaction);
-    };
-  }
-
   configureProjectionPlugin(
     config: ProjectionPluginConfig
   ): ProjectionalEditorBuilder {
@@ -114,13 +71,7 @@ export default class ProjectionalEditorBuilder {
     return this;
   }
 
-  build(): EditorView {
-    return new EditorView({
-      state: EditorState.create({
-        extensions: this.extenstions,
-      }),
-      parent: this.parent,
-      dispatch: this.getDispatchFunction(),
-    });
+  build(): ProjectionalEditor {
+    return new ProjectionalEditor(this.extenstions, this.parent);
   }
 }
